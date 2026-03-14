@@ -194,9 +194,15 @@ test('FreezeHost 自动续期', async () => {
             console.log('✅ prompt=none 静默授权，无需手动点击');
         }
 
-        console.log('⏳ 等待回调跳转...');
-        await page.waitForURL(/free\.freezehost\.pro\/callback/);
-        await page.waitForURL(/free\.freezehost\.pro\/dashboard/);
+        // ── 等待最终落地 dashboard ────────────────────────────
+        console.log('⏳ 等待跳转 Dashboard...');
+        await page.waitForURL(
+            url => url.includes('/callback') || url.includes('/dashboard'),
+            { timeout: 30000 }
+        );
+        if (page.url().includes('/callback')) {
+            await page.waitForURL(/free\.freezehost\.pro\/dashboard/);
+        }
         console.log('✅ 登录成功！');
 
         // ── 续期 ──────────────────────────────────────────────
