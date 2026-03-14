@@ -199,17 +199,23 @@ test('FreezeHost 自动续期', async () => {
         }
 
         // ── OAuth 授权 ────────────────────────────────────────
-        console.log('⏳ 等待 OAuth 授权...');
-        try {
-            await page.waitForURL(/discord\.com\/oauth2\/authorize/, { timeout: 6000 });
-            console.log('🔍 进入 OAuth 授权页，处理中...');
-            await page.waitForTimeout(2000);
-            await handleOAuthPage(page);
-            await page.waitForURL(/free\.freezehost\.pro/, { timeout: 15000 });
-            console.log(`✅ 已离开 Discord，当前：${page.url()}`);
-        } catch {
-            console.log(`✅ 静默授权或已跳转，当前：${page.url()}`);
-        }
+         console.log('⏳ 等待 OAuth 授权...');
+         try {
+             await page.waitForURL(/discord\.com\/oauth2\/authorize/, { timeout: 6000 });
+             console.log('🔍 进入 OAuth 授权页，处理中...');
+             await page.waitForTimeout(2000);
+             
+             if (page.url().includes('discord.com')) {
+                 await handleOAuthPage(page);
+             } else {
+                 console.log('✅ 已自动完成授权，无需手动点击');
+             }
+             
+             await page.waitForURL(/free\.freezehost\.pro/, { timeout: 15000 });
+             console.log(`✅ 已离开 Discord，当前：${page.url()}`);
+         } catch {
+             console.log(`✅ 静默授权或已跳转，当前：${page.url()}`);
+         }
 
         // ── 确认到达 Dashboard ────────────────────────────────
         console.log('⏳ 确认到达 Dashboard...');
