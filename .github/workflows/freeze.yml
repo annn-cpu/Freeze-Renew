@@ -1,7 +1,7 @@
 name: 🎮 FreezeHost 自动续期
 on:
   schedule:
-    - cron: '0 8 */10 * *'
+    - cron: '0 0 * * *'   # 每天 UTC 0:00 = 北京时间 08:00
   workflow_dispatch:
 
 jobs:
@@ -9,11 +9,12 @@ jobs:
     name: 🔄 执行续期
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
       - name: 📥 拉取私库代码
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository_owner }}/FreezeHost-Keep-Private
+          repository: ${{ github.repository_owner }}/Freeze-Renew-Private
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
 
       - name: 🟢 安装 Node.js
