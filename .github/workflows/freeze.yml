@@ -1,7 +1,7 @@
 name: 🎮 FreezeHost 自动续期
 on:
   schedule:
-    - cron: '0 0 * * *'   # 每天 UTC 0:00 = 北京时间 08:00
+    - cron: '0 0 * * *'   # 每天 UTC 00:00 = 北京时间 08:00
   workflow_dispatch:
 
 jobs:
@@ -9,7 +9,6 @@ jobs:
     name: 🔄 执行续期
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - name: 📥 拉取私库代码
         uses: actions/checkout@v4
@@ -47,10 +46,10 @@ jobs:
 
       - name: 🚀 运行续期脚本
         env:
-          DISCORD_ACCOUNT: ${{ secrets.DISCORD_ACCOUNT }}
-          TG_BOT:          ${{ secrets.TG_BOT }}
-          GOST_PROXY:      http://127.0.0.1:8080
-        run: npx playwright test
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          TG_BOT:               ${{ secrets.TG_BOT }}
+          GOST_PROXY:           http://127.0.0.1:8080
+        run: npx playwright test tests/freeze.spec.js
 
       - name: 📸 上传失败截图
         if: failure()
